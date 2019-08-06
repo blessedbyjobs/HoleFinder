@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleObserver;
 
@@ -43,6 +45,7 @@ public class AccelerometerPresenter <T extends AccelerometerContract.View>
         if (!isViewAttached()) throw new AccelerometerPresenter.MvpViewNotAttachedException();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void startButtonClicked(Intent intent) {
         checkViewAttached();
@@ -79,6 +82,7 @@ public class AccelerometerPresenter <T extends AccelerometerContract.View>
                 && ContextCompat.checkSelfPermission(getView().getViewActivity(), LOCATION_PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void requestPermissions() {
         getView().getViewActivity().requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCAL_PERMISSIONS);

@@ -6,12 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Timer;
@@ -60,6 +62,7 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
         setText();
 
         mStartInputDataButton.setOnClickListener(new android.view.View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(android.view.View v) {
                 intent = new Intent(AccelerometerActivity.this, TrackingService.class);
