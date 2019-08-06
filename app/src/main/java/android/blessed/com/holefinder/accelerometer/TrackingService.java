@@ -80,6 +80,7 @@ public class TrackingService extends Service {
 
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onSensorChanged(SensorEvent event) {
             switch (event.sensor.getType()) {
@@ -149,6 +150,7 @@ public class TrackingService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void getPosition() {
         try {
             if (permissionsCheck()) {
