@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:padding="24dp"
+        android:id="@+id/accelerometer_data"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_button"
+        android:text="@string/accelerometer_start_input_data_button"
+        android:layout_margin="18dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/end_button"
+        android:text="@string/accelerometer_end_input_data_button"
+        android:layout_margin="18dp" />
+
+    <Button
+        android:id="@+id/clear_file_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="18dp"
+        android:text="@string/clear_file_button" />
+
+    <TextView
+        android:id="@+id/file_text_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:padding="16dp"
+        android:text="@string/file_info"
+        android:textAlignment="center" />
+
+</LinearLayout>

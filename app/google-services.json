@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "92780297392",
+    "firebase_url": "https://holesearcher-3deda.firebaseio.com",
+    "project_id": "holesearcher-3deda",
+    "storage_bucket": "holesearcher-3deda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92780297392:android:3da25afd54925cbf",
+        "android_client_info": {
+          "package_name": "android.blessed.com.holefinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92780297392-fgdsefcvgai0mnv9lag8ukrpcvb1un69.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnWhBQQQC3ICT19aTdjeeapgUuMkGC9v0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92780297392-fgdsefcvgai0mnv9lag8ukrpcvb1un69.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

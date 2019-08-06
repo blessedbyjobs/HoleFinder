@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">HoleFinder</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_accelerometer">Accelerometer</string>
+
+    <string name="main_activity_title">Стартовый экран</string>
+    <string name="main_activity_map_button">Карта</string>
+
+    <string name="main_activity_accelerometer_button">Акселерометр</string>
+    <string name="accelerometer_data">Данные акселерометра: </string>
+    <string name="accelerometer_start_input_data_button">Начать запись данных</string>
+    <string name="accelerometer_end_input_data_button">Конец записи данных</string>
+
+    <string name="file_info">После установки новой версии очищайте файл данных для корректного оторбражения информации</string>
+    <string name="clear_file_button">Очистить файл</string>
+</resources>
