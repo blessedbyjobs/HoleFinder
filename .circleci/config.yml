@@ -32,5 +32,4 @@ jobs:
           path: app/build/outputs/apk/debug/
           destination: artifact-file
       - deploy:
-          command: |
-            echo "Run gradle task to upload generated APK to Fabric"
+          command: ./gradlew assembleRelease crashlyticsUploadDistributionRelease
