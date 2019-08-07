@@ -62,3 +62,17 @@ jobs:
       - run:
           name: Do the APK distribution
           command: ./gradlew crashlyticsUploadDistributionProductionRelease
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - development
+                - master
