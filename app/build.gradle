@@ -23,7 +23,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,12 +47,12 @@ android {
     }
 }
 
-/*android.applicationVariants.all { variant ->
+android.applicationVariants.all { variant ->
     variant.outputs.all {
         def appName = "HoleFinder"
         outputFileName = appName+"-${variant.versionName}.apk"
     }
-}*/
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
