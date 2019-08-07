@@ -47,12 +47,12 @@ android {
     }
 }
 
-android.applicationVariants.all { variant ->
+/*android.applicationVariants.all { variant ->
     variant.outputs.all {
         def appName = "HoleFinder"
         outputFileName = appName+"-${variant.versionName}.apk"
     }
-}
+}*/
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

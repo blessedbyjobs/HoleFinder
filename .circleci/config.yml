@@ -36,6 +36,8 @@ jobs:
           destination: artifact-file
   deployment:
     beta:
-      branch: master
-      commands:
-        - cd scripts && ./build.sh
+      steps:
+        - checkout
+        - run:
+            name: Beta apk
+            commands: cd scripts && ./build.sh
