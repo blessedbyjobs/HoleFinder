@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +47,7 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.accelerometer_activity);
 
         if (savedInstanceState != null) {
