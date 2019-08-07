@@ -34,10 +34,3 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/apk/debug/
           destination: artifact-file
-  deployment:
-    beta:
-      steps:
-        - checkout
-        - run:
-            name: Beta apk
-            commands: cd scripts && ./build.sh
