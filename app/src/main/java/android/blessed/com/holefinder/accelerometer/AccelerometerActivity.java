@@ -50,10 +50,6 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.accelerometer_activity);
 
-        if (savedInstanceState != null) {
-            switchButtons(savedInstanceState.getBoolean("StartWritingData"));
-        }
-
         mPresenter = new AccelerometerPresenter();
 
         mAccelerometerData = findViewById(R.id.accelerometer_data);
@@ -61,6 +57,10 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
         mEndInputDataButton = findViewById(R.id.end_button);
         mEndInputDataButton.setEnabled(false);
         mClearFileButton = findViewById(R.id.clear_file_button);
+
+        if (savedInstanceState != null) {
+            switchButtons(savedInstanceState.getBoolean("StartWritingData"));
+        }
 
         setText();
 
