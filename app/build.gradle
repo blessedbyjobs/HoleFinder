@@ -23,7 +23,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,7 +43,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             ext.betaDistributionGroupAliases = "holefinders"
-            ext.betaDistributionReleaseNotes="Release Notes for this build."
+            ext.betaDistributionReleaseNotes="Фикс ошибки с переключателем кнопок"
         }
     }
 }
