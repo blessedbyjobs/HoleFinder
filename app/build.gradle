@@ -43,6 +43,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             ext.betaDistributionGroupAliases = "holefinders"
+            ext.betaDistributionReleaseNotes="Release Notes for this build."
         }
     }
 }
