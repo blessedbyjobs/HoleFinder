@@ -10,14 +10,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import java.io.BufferedWriter;
@@ -29,31 +28,13 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TrackingService extends Service {
-    private class GPSListener implements android.location.LocationListener {
-
-        @Override
-        public void onLocationChanged(Location location) {
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-        }
-    }
 
     public final static String MY_ACTION = "MY_ACTION";
 
     private Location mCurrentLocation;
 
     private LocationManager mLocationManager;
-    android.location.LocationListener mLocationListener;
+    LocationListener mLocationListener;
 
     private SensorManager mSensorManager;
     private Sensor mSensorAccelerometer;
@@ -80,7 +61,6 @@ public class TrackingService extends Service {
 
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onSensorChanged(SensorEvent event) {
             switch (event.sensor.getType()) {
@@ -116,20 +96,45 @@ public class TrackingService extends Service {
         super.onCreate();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorLinAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorGravity = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        if (mSensorManager != null) {
+            mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensorLinAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+            mSensorGravity = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        mSensorManager.registerListener(listener, mSensorAccelerometer, 100000);
+            mSensorManager.registerListener(listener, mSensorAccelerometer, 100000);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Разрешения не были предоставлены", Toast.LENGTH_SHORT).show();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Разрешения не были предоставлены", Toast.LENGTH_SHORT).show();
+            } else {
+                mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                mLocationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                };
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, mLocationListener);
+            }
         } else {
-            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            mLocationListener = new GPSListener();
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, mLocationListener);
+            Toast.makeText(this, "Отсутсвует акселерометр! Приложение недоступно", Toast.LENGTH_SHORT).show();
+            onDestroy();
         }
     }
 
@@ -150,7 +155,6 @@ public class TrackingService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void getPosition() {
         try {
             if (permissionsCheck()) {
@@ -169,9 +173,9 @@ public class TrackingService extends Service {
         sb.append(format(valuesAccelerometerMotion));
         sb.append("\nЧистая гравитация: ");
         sb.append(format(valuesAccelerometerGravity));
-        sb.append("\n\nДанные сенсора чистого ускорения: ");
+        sb.append("\n\nСенсор чистого ускорения: ");
         sb.append(format(valuesLinAccelerometer));
-        sb.append("\nДанные сенсора гравитации: ");
+        sb.append("\nСенсор гравитации: ");
         sb.append(format(valuesGravity));
 
         Intent intent = new Intent().setAction(MY_ACTION).putExtra("PASSED_DATA", sb.toString());
@@ -197,8 +201,8 @@ public class TrackingService extends Service {
                         + "Ускорение + гравитация: " + format(valuesAccelerometer)
                         + "\n\nЧистое ускорение: " + format(valuesAccelerometerMotion)
                         + "\nЧистая гравитация: " + format(valuesAccelerometerGravity)
-                        + "\n\nДанные сенсора чистого ускорения: " + format(valuesLinAccelerometer)
-                        + "\nДанные сенсора гравитации: " + format(valuesGravity)
+                        + "\n\nСенсор чистого ускорения: " + format(valuesLinAccelerometer)
+                        + "\nСенсор гравитации: " + format(valuesGravity)
                         + "\n\nКоординаты: " + mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude()
                         + "\n\nДата и время: " + date.getTime());
                 bw.close();
@@ -219,9 +223,9 @@ public class TrackingService extends Service {
         mLocationManager.removeUpdates(mLocationListener);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     private boolean permissionsCheck() {
-        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -230,7 +234,7 @@ public class TrackingService extends Service {
     }
 
     private String format(float[] values) {
-        return String.format(Locale.ENGLISH,"%1$.1f\t\t%2$.1f\t\t%3$.1f", values[0], values[1], values[2]);
+        return String.format(Locale.ENGLISH,"%1$.1f  %2$.1f  %3$.1f", values[0], values[1], values[2]);
     }
 
     private boolean checkValues(float[] values) {

@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleObserver;
 
@@ -45,17 +43,16 @@ public class AccelerometerPresenter <T extends AccelerometerContract.View>
         if (!isViewAttached()) throw new AccelerometerPresenter.MvpViewNotAttachedException();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void startButtonClicked(Intent intent) {
         checkViewAttached();
         if (hasLocationPermissions()) {
             if (isGPSEnabled()) {
-                getView().showTrackingInfo(true);
-                getView().switchButtons(true);
-                getView().getViewActivity().startService(intent);
+                mView.showTrackingInfo(true);
+                mView.switchButtons(true);
+                mView.getViewActivity().startService(intent);
             } else {
-                getView().showGPSToast();
+                mView.showGPSToast();
             }
         } else {
             requestPermissions();
@@ -65,15 +62,19 @@ public class AccelerometerPresenter <T extends AccelerometerContract.View>
     @Override
     public void stopButtonClicked(Intent intent) {
         checkViewAttached();
-        getView().showTrackingInfo(false);
-        getView().getViewActivity().stopService(intent);
-        getView().switchButtons(false);
+        mView.showTrackingInfo(false);
+        mView.getViewActivity().stopService(intent);
+        mView.switchButtons(false);
     }
 
     @Override
     public boolean isGPSEnabled() {
         LocationManager locationManager = (LocationManager) getView().getViewActivity().getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (locationManager != null) {
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -82,10 +83,9 @@ public class AccelerometerPresenter <T extends AccelerometerContract.View>
                 && ContextCompat.checkSelfPermission(getView().getViewActivity(), LOCATION_PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void requestPermissions() {
-        getView().getViewActivity().requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCAL_PERMISSIONS);
+        ActivityCompat.requestPermissions(mView.getViewActivity(), LOCATION_PERMISSIONS, REQUEST_LOCAL_PERMISSIONS);
     }
 
     public void setClearFile(boolean clearFile) {

@@ -22,7 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AccelerometerActivity extends AppCompatActivity implements AccelerometerContract.View {
-    private AccelerometerPresenter mPresenter;
+    private AccelerometerPresenter<AccelerometerContract.View> mPresenter;
 
     Intent intent;
     BroadcastReceiver myReceiver;
@@ -32,6 +32,7 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
     private Button mEndInputDataButton;
     private Button mClearFileButton;
     private TextView mAccelerometerData;
+    private TextView mFileTextInfo;
 
     private StringBuilder sb = new StringBuilder();
     Timer timer;
@@ -50,13 +51,14 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.accelerometer_activity);
 
-        mPresenter = new AccelerometerPresenter();
+        mPresenter = new AccelerometerPresenter<>();
 
         mAccelerometerData = findViewById(R.id.accelerometer_data);
         mStartInputDataButton = findViewById(R.id.start_button);
         mEndInputDataButton = findViewById(R.id.end_button);
         mEndInputDataButton.setEnabled(false);
         mClearFileButton = findViewById(R.id.clear_file_button);
+        mFileTextInfo = findViewById(R.id.file_text_info);
 
         if (savedInstanceState != null) {
             switchButtons(savedInstanceState.getBoolean("StartWritingData"));
@@ -68,6 +70,7 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(android.view.View v) {
+                mFileTextInfo.setText("");
                 intent = new Intent(AccelerometerActivity.this, TrackingService.class);
                 if (mPresenter.isClearFile()) {
                     intent.putExtra("Clear", mPresenter.isClearFile());
@@ -164,8 +167,8 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
         sb.append("Ускорение + гравитация: ");
         sb.append("\n\nЧистое ускорение: ");
         sb.append("\nЧистая гравитация: ");
-        sb.append("\n\nДанные сенсора чистого ускорения: ");
-        sb.append("\nДанные сенсора гравитации: ");
+        sb.append("\n\nСенсор чистого ускорения: ");
+        sb.append("\nСенсор гравитации: ");
         mAccelerometerData.setText(sb);
     }
 
