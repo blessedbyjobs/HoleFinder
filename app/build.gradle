@@ -43,7 +43,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             ext.betaDistributionGroupAliases = "holefinders"
-            ext.betaDistributionReleaseNotes="Фикс ошибки с переключателем кнопок"
+            ext.betaDistributionReleaseNotes="Фикс ошибок: Android Oreo notifications, отваливание intent для службы, ошибок с сохранением данных."
         }
     }
 }

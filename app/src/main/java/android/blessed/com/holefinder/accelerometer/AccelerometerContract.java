@@ -11,6 +11,8 @@ public interface AccelerometerContract {
         Activity getViewActivity();
         void showGPSToast();
         void showTrackingInfo(boolean started);
+        void setScreenElements();
+        void setListeners();
     }
 
     interface Presenter <V extends AccelerometerContract.View> {

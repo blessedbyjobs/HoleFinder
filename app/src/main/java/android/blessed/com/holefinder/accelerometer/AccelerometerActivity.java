@@ -23,7 +23,6 @@ import java.util.TimerTask;
 
 public class AccelerometerActivity extends AppCompatActivity implements AccelerometerContract.View {
     private AccelerometerPresenter<AccelerometerContract.View> mPresenter;
-
     Intent intent;
     BroadcastReceiver myReceiver;
     IntentFilter mIntentFilter;
@@ -43,6 +42,8 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("StartWritingData", mStartWritingData);
+        outState.putParcelable("ActivityIntent", intent);
+        outState.putCharSequence("DataText", sb);
     }
 
     @Override
@@ -53,87 +54,22 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
 
         mPresenter = new AccelerometerPresenter<>();
 
-        mAccelerometerData = findViewById(R.id.accelerometer_data);
-        mStartInputDataButton = findViewById(R.id.start_button);
-        mEndInputDataButton = findViewById(R.id.end_button);
-        mEndInputDataButton.setEnabled(false);
-        mClearFileButton = findViewById(R.id.clear_file_button);
-        mFileTextInfo = findViewById(R.id.file_text_info);
-
-        if (savedInstanceState != null) {
-            switchButtons(savedInstanceState.getBoolean("StartWritingData"));
-        }
-
+        setScreenElements();
         setText();
 
-        mStartInputDataButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(android.view.View v) {
-                mFileTextInfo.setText("");
-                intent = new Intent(AccelerometerActivity.this, TrackingService.class);
-                if (mPresenter.isClearFile()) {
-                    intent.putExtra("Clear", mPresenter.isClearFile());
-                }
-                mPresenter.setClearFile(false);
-                mPresenter.startButtonClicked(intent);
-            }
-        });
+        if (savedInstanceState != null) {
+            intent = savedInstanceState.getParcelable("ActivityIntent");
+            switchButtons(savedInstanceState.getBoolean("StartWritingData"));
+            sb = (StringBuilder) savedInstanceState.getCharSequence("DataText");
+        }
 
-        mEndInputDataButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                if (intent != null) {
-                    mPresenter.stopButtonClicked(intent);
-                } else {
-                    Toast.makeText(AccelerometerActivity.this, "Критическая ошибка", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        mClearFileButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                mPresenter.setClearFile(true);
-                Toast.makeText(AccelerometerActivity.this, "Очищено!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        myReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                sb.setLength(0);
-                sb.append(intent.getStringExtra("PASSED_DATA"));
-                showInfo();
-            }
-        };
-
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(TrackingService.MY_ACTION);
-        registerReceiver(myReceiver, mIntentFilter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopService(new Intent(this, TrackingService.class));
+        setListeners();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mPresenter.attachView(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        try {
-            unregisterReceiver(myReceiver);
-        } catch (Exception e) {
-            Log.e("Error", String.valueOf(e));
-        }
-        mPresenter.detachView();
     }
 
     @Override
@@ -159,6 +95,28 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
             }
         };
         timer.schedule(task, 0, 250);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            unregisterReceiver(myReceiver);
+        } catch (Exception e) {
+            Log.e("Error", String.valueOf(e));
+        }
+        mPresenter.detachView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -207,5 +165,64 @@ public class AccelerometerActivity extends AppCompatActivity implements Accelero
         } else {
             Toast.makeText(AccelerometerActivity.this, "Прекращено отслеживание", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void setScreenElements() {
+        mAccelerometerData = findViewById(R.id.accelerometer_data);
+        mStartInputDataButton = findViewById(R.id.start_button);
+        mEndInputDataButton = findViewById(R.id.end_button);
+        mEndInputDataButton.setEnabled(false);
+        mClearFileButton = findViewById(R.id.clear_file_button);
+        mFileTextInfo = findViewById(R.id.file_text_info);
+    }
+
+    @Override
+    public void setListeners() {
+        mStartInputDataButton.setOnClickListener(new android.view.View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(android.view.View v) {
+                mFileTextInfo.setText("");
+                intent = new Intent(AccelerometerActivity.this, TrackingService.class);
+                if (mPresenter.isClearFile()) {
+                    intent.putExtra("Clear", mPresenter.isClearFile());
+                }
+                mPresenter.setClearFile(false);
+                mPresenter.startButtonClicked(intent);
+            }
+        });
+
+        mEndInputDataButton.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                if (intent != null) {
+                    mPresenter.stopButtonClicked(intent);
+                } else {
+                    Toast.makeText(AccelerometerActivity.this, "Критическая ошибка", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mClearFileButton.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                mPresenter.setClearFile(true);
+                Toast.makeText(AccelerometerActivity.this, "Очищено!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        myReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                sb.setLength(0);
+                sb.append(intent.getStringExtra("PASSED_DATA"));
+                showInfo();
+            }
+        };
+
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(TrackingService.MY_ACTION);
+        registerReceiver(myReceiver, mIntentFilter);
     }
 }
