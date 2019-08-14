@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleObserver;
+
+import static androidx.core.content.ContextCompat.startForegroundService;
 
 public class AccelerometerPresenter <T extends AccelerometerContract.View>
         implements AccelerometerContract.Presenter<T>, LifecycleObserver {
@@ -50,7 +54,11 @@ public class AccelerometerPresenter <T extends AccelerometerContract.View>
             if (isGPSEnabled()) {
                 mView.showTrackingInfo(true);
                 mView.switchButtons(true);
-                mView.getViewActivity().startService(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(mView.getViewActivity(), intent);
+                } else {
+                    mView.getViewActivity().startService(intent);
+                }
             } else {
                 mView.showGPSToast();
             }
