@@ -1,16 +1,13 @@
 package android.blessed.com.holefinder.accelerometer;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
-import android.app.NotificationManager;
 import android.app.Service;
-import android.blessed.com.holefinder.R;
+import android.blessed.com.holefinder.models.RoadsRequestBuilder;
+import android.blessed.com.holefinder.models.RoadsResponse;
+import android.blessed.com.holefinder.network.NetworkService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -24,9 +21,9 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
+import org.osmdroid.util.BoundingBox;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -34,7 +31,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TrackingService extends Service {
 
@@ -139,6 +141,20 @@ public class TrackingService extends Service {
             Toast.makeText(this, "Отсутствует акселерометр! Приложение недоступно", Toast.LENGTH_SHORT).show();
             onDestroy();
         }
+
+        RoadsRequestBuilder query = new RoadsRequestBuilder(30, new BoundingBox(50.746,7.154,50.748,7.157));
+
+        NetworkService.getInstance().getOSMApi().getRoads(query.toString()).enqueue(new Callback<RoadsResponse>() {
+            @Override
+            public void onResponse(Call<RoadsResponse> call, Response<RoadsResponse> response) {
+                Log.i("OSMResponse", String.valueOf(response.body().getElements()));
+            }
+
+            @Override
+            public void onFailure(Call<RoadsResponse> call, Throwable t) {
+                Log.i("OSMResponse", String.valueOf(t));
+            }
+        });
     }
 
     @Override
@@ -181,11 +197,7 @@ public class TrackingService extends Service {
         sb.append("\n\nЧистое ускорение: ");
         sb.append(format(valuesAccelerometerMotion));
         sb.append("\nЧистая гравитация: ");
-        sb.append(format(valuesAccelerometerGravity));
-        sb.append("\n\nСенсор чистого ускорения: ");
-        sb.append(format(valuesLinAccelerometer));
-        sb.append("\nСенсор гравитации: ");
-        sb.append(format(valuesGravity));
+        sb.append(format(valuesAccelerometerGravity));;
         Log.i("Service", String.valueOf(sb));
         Intent intent = new Intent().setAction(MY_ACTION).putExtra("PASSED_DATA", sb.toString());
         sendBroadcast(intent);
@@ -208,8 +220,6 @@ public class TrackingService extends Service {
                             + "Ускорение + гравитация: " + format(valuesAccelerometer)
                             + "\n\nЧистое ускорение: " + format(valuesAccelerometerMotion)
                             + "\nЧистая гравитация: " + format(valuesAccelerometerGravity)
-                            + "\n\nСенсор чистого ускорения: " + format(valuesLinAccelerometer)
-                            + "\nСенсор гравитации: " + format(valuesGravity)
                             + "\n\nКоординаты: " + mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude()
                             + "\n\nДата и время: " + new Date().getTime());
                     bw.close();

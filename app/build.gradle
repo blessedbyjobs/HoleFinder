@@ -1,19 +1,29 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://jitpack.io" }
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
-apply plugin: 'com.android.application'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
+
+kapt {
+    generateStubs = true
+}
 
 android {
     compileSdkVersion 29
@@ -63,12 +73,34 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
 
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-analytics:17.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    // работа с MVP
+    implementation 'tech.schoolhelper:moxy-x:1.7.0'
+    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
+    kapt  'tech.schoolhelper:moxy-x-compiler:1.7.0'
+
+    // удобная работа с разрешениями
+    implementation 'com.karumi:dexter:5.0.0'
+
+    // kotlin
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // rxjava
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0-RC2'
+
+    // dagger
+    implementation 'com.google.dagger:dagger:2.24'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
+
+    // для работы с картами
+    implementation 'org.osmdroid:osmdroid-android:6.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

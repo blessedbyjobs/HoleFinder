@@ -14,18 +14,16 @@ import android.provider.Settings;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-public class NotificationHelper {
+class NotificationHelper {
     private Context mContext;
-    private NotificationManager mNotificationManager;
-    private NotificationCompat.Builder mBuilder;
-    public static final String NOTIFICATION_CHANNEL_ID = "10001";
+    private static final String NOTIFICATION_CHANNEL_ID = "10001";
 
-    public NotificationHelper(Context context) {
+    NotificationHelper(Context context) {
         mContext = context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Notification createNotification(String title, String message)
+    Notification createNotification(String title, String message)
     {
         Intent resultIntent = new Intent(mContext , TrackingService.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -34,15 +32,15 @@ public class NotificationHelper {
                 0, resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        mBuilder.setContentTitle(title)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(false)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setContentIntent(resultPendingIntent);
 
-        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
@@ -50,9 +48,9 @@ public class NotificationHelper {
         notificationChannel.setLightColor(Color.RED);
         notificationChannel.enableVibration(true);
         notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-        assert mNotificationManager != null;
-        mBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
-        mNotificationManager.createNotificationChannel(notificationChannel);
+        assert notificationManager != null;
+        builder.setChannelId(NOTIFICATION_CHANNEL_ID);
+        notificationManager.createNotificationChannel(notificationChannel);
 
         return new NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(title)
