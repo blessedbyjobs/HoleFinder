@@ -3,4 +3,18 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="bottom_navigation_background">#A9A2A6</color>
+    <color name="bottom_navigation_active">#FF4954</color>
+    <color name="bottom_navigation_inactive">#FFFFFF</color>
+
+    <color name="profile_light_background">#514E56</color>
+    <color name="profile_background">#484349</color>
+    <color name="profile_divide_bar">#5A5760</color>
+    <color name="profile_text_color">#FFFFFF</color>
+
+    <color name="start_record_button_inactive">#FF4954</color>
+    <color name="start_record_button_inactive_pressed">#FF4980</color>
+    <color name="start_record_button_active">#4987FF</color>
+    <color name="start_record_button_active_pressed">#4965FF</color>
 </resources>
