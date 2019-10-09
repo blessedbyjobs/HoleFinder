@@ -1,9 +1,7 @@
 package android.blessed.com.holefinder.models;
 
-import org.osmdroid.util.BoundingBox;
-
 public class RoadsRequestBuilder {
-    private int timeout;
+    /*private int timeout;
     private BoundingBox bbox;
 
     private static final String urlBeggining = "interpreter?data=";
@@ -22,5 +20,5 @@ public class RoadsRequestBuilder {
 
     private String bboxToString() {
         return bbox.getLatNorth() + "," + bbox.getLonEast() + "," + bbox.getLatSouth() + "," + bbox.getLonWest();
-    }
+    }*/
 }

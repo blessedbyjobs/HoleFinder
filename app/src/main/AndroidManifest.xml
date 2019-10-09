@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="android.blessed.com.holefinder">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".global.Application"
@@ -17,16 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service
-            android:name=".accelerometer.TrackingService"
-            android:enabled="true"
-            android:exported="true"/>
-
-        <activity android:name=".accelerometer.AccelerometerActivity">
-        </activity>
-
-        <activity android:name=".accelerometer.AccelerometerActivityView">
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,9 +31,19 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name="android.blessed.com.holefinder.services.TrackingService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".accelerometer.AccelerometerActivityView"></activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f3a2af29c55ed22d74f00c2662cb71f6d831ee0c" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD7FEG2JJYsyd7hRi2Uqvqo_VNhAbaIJ18" />
     </application>
 
 </manifest>

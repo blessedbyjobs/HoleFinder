@@ -8,19 +8,21 @@ public class NetworkService {
     private static final String BASE_URL = "http://192.168.0.40:8080/";
     private static final String OSM_URL = "http://overpass-api.de/api/";
 
-    private Retrofit mRetrofitVistar;
-    private Retrofit mRetrofitOSM;
+    private VistarServerAPI mRetrofitVistar;
+    private ServerAPI.OSM mRetrofitOSM;
 
     private NetworkService() {
         mRetrofitVistar = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build()
+                .create(VistarServerAPI.class);
 
         mRetrofitOSM = new Retrofit.Builder()
                 .baseUrl(OSM_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build()
+                .create(ServerAPI.OSM.class);
     }
 
     public static NetworkService getInstance() {
@@ -31,9 +33,9 @@ public class NetworkService {
     }
 
     public VistarServerAPI getServerApi() {
-        return mRetrofitVistar.create(VistarServerAPI.class);
+        return mRetrofitVistar;
     }
-    public OSMServerAPI getOSMApi() {
-        return mRetrofitOSM.create(OSMServerAPI.class);
+    public ServerAPI.OSM getOSMApi() {
+        return mRetrofitOSM;
     }
 }

@@ -1,7 +1,7 @@
 package android.blessed.com.holefinder.accelerometer
 
-import android.Manifest
 import android.blessed.com.holefinder.R
+import android.blessed.com.holefinder.services.TrackingService
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,12 +13,6 @@ import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.accelerometer_activity.*
 import java.lang.Exception
@@ -124,17 +118,7 @@ class AccelerometerActivityView : MvpAppCompatActivity(), AccelerometerView {
     }
 
     override fun requestPermissions() {
-        var isPermissionGranted = false
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                .withListener(object : PermissionListener {
-                    override fun onPermissionGranted(response: PermissionGrantedResponse) { isPermissionGranted = true }
-
-                    override fun onPermissionDenied(response: PermissionDeniedResponse) { isPermissionGranted = false}
-
-                    override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest, token: PermissionToken) {/* ... */
-                    }
-                }).check()
+        var isPermissionGranted = true
 
         mAccelerometerPresenterPresenter.setPermission(isPermissionGranted)
     }
@@ -151,10 +135,6 @@ class AccelerometerActivityView : MvpAppCompatActivity(), AccelerometerView {
         Toast.makeText(this, resources.getString(R.string.start_tracking_toast), Toast.LENGTH_SHORT).show()
     } else {
         Toast.makeText(this, resources.getString(R.string.end_tracking_toast), Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun switchButtons(startCalculations: Boolean) {

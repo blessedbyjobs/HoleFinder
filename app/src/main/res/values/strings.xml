@@ -20,4 +20,10 @@
     <string name="gps_error_toast">Ошибка: включите GPS</string>
     <string name="start_tracking_toast">Начато отслеживание</string>
     <string name="end_tracking_toast">Прекращено отслеживание</string>
+
+    <string name="bottom_navigation_routs">Маршруты</string>
+    <string name="bottom_navigation_statistics">Статистика</string>
+    <string name="bottom_navigation_profile">Профиль</string>
+
+    <string name="login_screen_text">Авторизованные пользователи \nмогут просматривать статистику \nна сайте, попасть в ТОП и получить \nнаграду за свои достижения</string>
 </resources>
